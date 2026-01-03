@@ -32,6 +32,7 @@ function NewKey(name, eval)
         analog = 0,
         rise = false,
         fall = false,
+        pressedDuration = nil,
     }
     setmetatable(new, KeyFunctions)
     return new
@@ -69,9 +70,11 @@ function KeyFunctions.update(self, dt)
         if newBooleanState then
             self.rise = true
             self.fall = false
+            self.pressedDuration = 0
         else
             self.rise = false
             self.fall = true
+            self.pressedDuration = nil
         end
     else
         --[[if self.rise or self.fall then
@@ -79,6 +82,9 @@ function KeyFunctions.update(self, dt)
             end]]
         self.rise = false
         self.fall = false
+        if self.pressed then
+            self.pressedDuration = self.pressedDuration + dt
+        end
     end
 end
 

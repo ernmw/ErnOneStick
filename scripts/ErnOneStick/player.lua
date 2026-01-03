@@ -339,8 +339,6 @@ uiState:set({
     onFrame = function(s, dt)
         if uiInterface.getMode() == nil then
             stateMachine:pop()
-        else
-            admin.debugPrint(tostring(uiInterface.getMode()))
         end
     end,
     onUpdate = function(s, dt)

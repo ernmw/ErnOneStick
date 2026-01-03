@@ -31,8 +31,10 @@ local toggleKey = keytrack.NewKey("toggle",
 local function canDoMagic()
     local hasSpell = (types.Actor.getSelectedEnchantedItem(pself) ~= nil) or (types.Actor.getSelectedSpell(pself) ~= nil)
 
-    return hasSpell and types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Magic) and
+    local allowed = types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Magic) and
         (types.Player.isWerewolf(pself) ~= true)
+    --print("magic: hasSpell: " .. tostring(hasSpell) .. ", allowed: " .. tostring(allowed))
+    return hasSpell and allowed
 end
 
 local function canDoFighting()
@@ -72,18 +74,14 @@ local function controlsAllowed()
 end
 
 local longPressHandled = false
-local pressedDuration = 0
 local function onFrame(dt)
     toggleKey:update(dt)
     if controlsAllowed() == false then
-        pressedDuration = 0
         longPressHandled = false
         return
     end
-    if toggleKey.pressed then
-        pressedDuration = pressedDuration + dt
-    end
-    if longPressHandled == false and pressedDuration > 0.2 then
+
+    if longPressHandled == false and toggleKey.pressed and toggleKey.pressedDuration > 0.2 then
         --settings.debugPrint("toggle sneak")
         pself.controls.sneak = not pself.controls.sneak
         longPressHandled = true
@@ -94,7 +92,6 @@ local function onFrame(dt)
             --settings.debugPrint("toggle stance")
             toggle()
         end
-        pressedDuration = 0
         longPressHandled = false
     end
 end

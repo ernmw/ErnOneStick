@@ -23,7 +23,7 @@ local latched = true
 local function hasLowFatigue(runMinimumFatigue)
     local min = runMinimumFatigue
     if min <= 0 then
-        admin.debugPrint("fatigue threshold: " .. tostring(min) .. ", low")
+        --admin.debugPrint("fatigue threshold: " .. tostring(min) .. ", low")
         return false
     end
     if min >= 100 then
