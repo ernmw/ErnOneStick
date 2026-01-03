@@ -47,9 +47,11 @@ end
 
 local function takeControl(assumeControl)
     if assumeControl then
+        admin.debugPrint("disabling controls")
         controls.overrideMovementControls(true)
         cameraInterface.disableModeControl(MOD_NAME)
     else
+        admin.debugPrint("enabling controls")
         controls.overrideMovementControls(false)
         cameraInterface.enableModeControl(MOD_NAME)
     end
@@ -337,6 +339,8 @@ uiState:set({
     onFrame = function(s, dt)
         if uiInterface.getMode() == nil then
             stateMachine:pop()
+        else
+            admin.debugPrint(tostring(uiInterface.getMode()))
         end
     end,
     onUpdate = function(s, dt)
