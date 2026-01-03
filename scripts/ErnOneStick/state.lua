@@ -42,6 +42,8 @@ function NewStateContainer()
 end
 
 local StateFunctions = {}
+
+
 StateFunctions.__index = function(table, key)
     local raw = rawget(StateFunctions, key)
     if raw ~= nil then
@@ -54,6 +56,8 @@ StateFunctions.__index = function(table, key)
         error("empty base during '" .. key .. "' access")
     end
 end
+
+
 
 function StateFunctions.set(self, base)
     self.base = base
@@ -89,8 +93,8 @@ function StateContainerFunctions.push(self, state)
 
     -- prevent a state from being in the stack more than once.
     for _, elem in ipairs(self.stack) do
-        if elem == self then
-            error("state is already in the stack")
+        if elem == state then
+            --error("state is already in the stack")
             return
         end
     end
@@ -109,26 +113,30 @@ function StateContainerFunctions.push(self, state)
 end
 
 function StateContainerFunctions.pop(self, skipOnEnter)
-    --print("pop old state")
-    if #(self.stack) > 0 then
-        local state = table.remove(self.stack, 1)
-        if state.name ~= nil then
-            admin.debugPrint("exit state: " .. tostring(state.name))
-        end
-        if state.onExit ~= nil then
-            state.onExit(state.base)
-        end
-        return state
+    if #self.stack == 0 then
+        return nil
     end
-    if skipOnEnter == true then
-        if #(self.stack) > 0 then
-            local next = self.stack[1]
-            if next.name ~= nil then
-                admin.debugPrint("enter state: " .. tostring(next.name))
-            end
+
+    local state = table.remove(self.stack, 1)
+
+    if state.name ~= nil then
+        admin.debugPrint("exit state: " .. tostring(state.name))
+    end
+    if state.onExit ~= nil then
+        state.onExit(state.base)
+    end
+
+    if not skipOnEnter and #self.stack > 0 then
+        local next = self.stack[1]
+        if next.name ~= nil then
+            admin.debugPrint("enter state: " .. tostring(next.name))
+        end
+        if next.onEnter ~= nil then
             next.onEnter(next.base)
         end
     end
+
+    return state
 end
 
 function StateContainerFunctions.replace(self, state)

@@ -47,9 +47,11 @@ end
 
 local function takeControl(assumeControl)
     if assumeControl then
+        admin.debugPrint("disabling controls")
         controls.overrideMovementControls(true)
         cameraInterface.disableModeControl(MOD_NAME)
     else
+        admin.debugPrint("enabling controls")
         controls.overrideMovementControls(false)
         cameraInterface.enableModeControl(MOD_NAME)
     end
