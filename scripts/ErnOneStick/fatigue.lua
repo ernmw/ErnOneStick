@@ -16,7 +16,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local pself = require("openmw.self")
-local admin = require("scripts.ErnOneStick.settings.admin")
 
 local latched = true
 

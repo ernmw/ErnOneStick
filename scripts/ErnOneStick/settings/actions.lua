@@ -16,29 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
 local MOD_NAME = require("scripts.ErnOneStick.ns")
-local interfaces = require("openmw.interfaces")
-local input = require('openmw.input')
 
-interfaces.Settings.registerPage {
-    key = MOD_NAME,
-    l10n = MOD_NAME,
-    name = "name",
-    description = "description"
+--- Calls to input.registerActionHandler should all be done in this function!
+local function init()
+
+end
+
+
+return {
+    engineHandlers = {
+        onInit = init,
+        onLoad = init,
+    },
 }
-
-input.registerAction {
-    key = MOD_NAME .. "LockButton",
-    type = input.ACTION_TYPE.Boolean,
-    l10n = MOD_NAME,
-    defaultValue = false,
-}
-
-input.registerAction {
-    key = MOD_NAME .. "ToggleButton",
-    type = input.ACTION_TYPE.Boolean,
-    l10n = MOD_NAME,
-    defaultValue = false,
-}
-
-
---require("scripts.ErnOneStick.settings.options")
