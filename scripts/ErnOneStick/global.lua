@@ -61,12 +61,6 @@ local function onUpdate(dt)
     end
 end
 
---[[local function onNewGame()
-    if settings.disable() ~= true then
-        settings.onNewGame()
-    end
-    end]]
-
 return {
     eventHandlers = {
         [MOD_NAME .. "onPause"] = onPause,
@@ -76,6 +70,5 @@ return {
     },
     engineHandlers = {
         onUpdate = onUpdate,
-        --onNewGame = onNewGame
     }
 }

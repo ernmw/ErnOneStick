@@ -1,6 +1,6 @@
-PLAYER:scripts/ErnOneStick/settings/group.lua
-MENU:scripts/ErnOneStick/settings/page.lua
-GLOBAL:scripts/ErnOneStick/settings/options.lua
+# The ordering of these next two is critical.
+PLAYER: scripts/ErnOneStick/settings/actions.lua
+MENU: scripts/ErnOneStick/settings/menu_settings.lua
 
 PLAYER:scripts/ErnOneStick/player.lua
 GLOBAL:scripts/ErnOneStick/global.lua
