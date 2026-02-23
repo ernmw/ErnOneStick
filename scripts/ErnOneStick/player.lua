@@ -37,7 +37,7 @@ local cameraInterface = require("openmw.interfaces").Camera
 local uiInterface = require("openmw.interfaces").UI
 
 
-local settings = require("scripts.ErnOneStick.settings")
+local settings = require("scripts.ErnOneStick.settings.settings")
 
 if settings.admin.disable then
     print(MOD_NAME .. " is disabled.")
@@ -245,7 +245,9 @@ end
 
 local keys = {
     lock = keytrack.NewKey("lock",
-        function(dt) return input.getBooleanActionValue(MOD_NAME .. "LockButton") end),
+        function(dt)
+            return input.getBooleanActionValue(settings.lockActionName)
+        end),
     forward = keytrack.NewKey("forward", function(dt)
         return input.getRangeActionValue("MoveForward")
     end),
@@ -1151,11 +1153,6 @@ local function onFrame(dt)
     for _, inp in pairs(keys) do
         inp:update(dt)
     end
-    keys.lock:update(dt)
-    keys.forward:update(dt)
-    keys.backward:update(dt)
-    keys.left:update(dt)
-    keys.right:update(dt)
 
     -- Have to recreate sneak toggle.
     if keys.sneak.rise then
@@ -1192,13 +1189,19 @@ local function UiModeChanged(data)
     end
 end
 
-local function onSettingsChange(data)
-    print("Settings change. Reloading.")
+local settingsChangedCallback = async:callback(function(group, key)
+    print("Settings change (" .. tostring(group) .. "=" .. tostring(key) .. "). Reloading.")
     stateMachine:replace(stateMachine:current())
-end
 
-settings.input.subscribe(onSettingsChange)
-settings.dpad.subscribe(onSettingsChange)
+    -- pop everything
+    --[[while stateMachine:pop() ~= nil do
+    end
+    stateMachine:push(normalState)
+    stateMachine:push(getTravelState())]] --
+end)
+
+settings.input.subscribe(settingsChangedCallback)
+settings.dpad.subscribe(settingsChangedCallback)
 
 
 return {

@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
-local admin = require("scripts.ErnOneStick.settings.admin")
+local settings = require("scripts.ErnOneStick.settings.settings")
 
 local StateContainerFunctions = {}
 StateContainerFunctions.__index = function(table, key)
@@ -105,7 +105,7 @@ function StateContainerFunctions.push(self, state)
     table.insert(self.stack, 1, state)
 
     if state.name ~= nil then
-        admin.debugPrint("enter state: " .. tostring(state.name))
+        settings.debugPrint("enter state: " .. tostring(state.name))
     end
     if state.onEnter ~= nil then
         state.onEnter(state.base)
@@ -120,7 +120,7 @@ function StateContainerFunctions.pop(self, skipOnEnter)
     local state = table.remove(self.stack, 1)
 
     if state.name ~= nil then
-        admin.debugPrint("exit state: " .. tostring(state.name))
+        settings.debugPrint("exit state: " .. tostring(state.name))
     end
     if state.onExit ~= nil then
         state.onExit(state.base)
@@ -129,7 +129,7 @@ function StateContainerFunctions.pop(self, skipOnEnter)
     if not skipOnEnter and #self.stack > 0 then
         local next = self.stack[1]
         if next.name ~= nil then
-            admin.debugPrint("enter state: " .. tostring(next.name))
+            settings.debugPrint("enter state: " .. tostring(next.name))
         end
         if next.onEnter ~= nil then
             next.onEnter(next.base)

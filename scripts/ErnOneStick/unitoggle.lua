@@ -24,9 +24,10 @@ local keytrack = require("scripts.ErnOneStick.keytrack")
 local core = require("openmw.core")
 local input = require('openmw.input')
 local controls = require('openmw.interfaces').Controls
+local settings = require("scripts.ErnOneStick.settings.settings")
 
 local toggleKey = keytrack.NewKey("toggle",
-    function(dt) return input.getBooleanActionValue(MOD_NAME .. "ToggleButton") end)
+    function(dt) return input.getBooleanActionValue(settings.uniToggleActionName) end)
 
 local function canDoMagic()
     local hasSpell = (types.Actor.getSelectedEnchantedItem(pself) ~= nil) or (types.Actor.getSelectedSpell(pself) ~= nil)

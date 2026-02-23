@@ -1,5 +1,5 @@
 --[[
-ErnPerkFramework for OpenMW.
+ErnOneStick for OpenMW.
 Copyright (C) 2025 Erin Pentecost
 
 This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local interfaces          = require("openmw.interfaces")
 local storage             = require("openmw.storage")
 local MOD_NAME            = require("scripts.ErnOneStick.ns")
-local util                = require('openmw.util')
+local aux_util            = require('openmw_aux.util')
 local input               = require('openmw.input')
 local async               = require("openmw.async")
 
 local minFatigue          = { "0%", "25%", "50%", "75%" }
 local cameraModes         = { "first", "third" }
 
-local lockActionName      = MOD_NAME .. "LockButton"
-local uniToggleActionName = MOD_NAME .. "ToggleButton"
+local lockActionName      = MOD_NAME .. "LockAction"
+local uniToggleActionName = MOD_NAME .. "ToggleAction"
 
 local function groupKey(groupName)
     return 'Settings/' .. MOD_NAME .. '/' .. groupName
@@ -126,7 +126,7 @@ local function init()
             key = "lockButton",
             name = "lockButton_name",
             description = "lockButton_description",
-            default = "Controller Y",
+            default = "None6",
             renderer = "inputBinding",
             argument = {
                 key = lockActionName,
@@ -219,7 +219,7 @@ local function init()
             key = "toggleButton",
             name = "toggleButton_name",
             description = "toggleButton_description",
-            default = "Controller X",
+            default = "None7",
             renderer = "inputBinding",
             argument = {
                 key = uniToggleActionName,
@@ -246,7 +246,10 @@ local lookupFuncTable = {
         if val ~= nil then
             return val
         else
-            error("unknown setting " .. tostring(key))
+            --print("cached settings: " .. aux_util.deepToString(table.cached, 3))
+            --print("current settings: " .. aux_util.deepToString(table.section:asTable(), 3))
+            error("unknown setting: " .. tostring(table.groupKey) .. " - " .. tostring(key))
+            return nil
         end
     end,
 }
@@ -260,10 +263,13 @@ local function newContainer(groupKeyParam)
         cached = {}
     }
     container.cached = container.section:asTable()
-    container.section.subscribe(async:callback(function(_, key)
-        container.cached[key] = container.section[key]
-    end))
+
     setmetatable(container, lookupFuncTable)
+
+    container.subscribe(async:callback(function(_, key)
+        container.cached[key] = container.section:get(key)
+    end))
+
     return container
 end
 
@@ -298,4 +304,6 @@ return {
     dpad = dpadContainer,
     input = inputContainer,
     debugPrint = debugPrint,
+    lockActionName = lockActionName,
+    uniToggleActionName = uniToggleActionName,
 }
