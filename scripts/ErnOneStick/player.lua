@@ -572,7 +572,7 @@ lockSelectionState:set({
                     return false
                 end
                 if e.type.records[e.recordId].name == "" then
-                    -- only instances with names can be targetted
+                    -- only instances with names can be targeted
                     return false
                 end
 
@@ -582,7 +582,7 @@ lockSelectionState:set({
                 local dist = getDistance(playerHead, e)
                 -- if the actor is very close, ignore LOS check.
                 -- we were getting problems with mudcrabs (horrible creatures).
-                if dist <= core.getGMST("iMaxActivateDist") * 0.75 then
+                if dist <= core.getGMST("iMaxActivateDist") then
                     return true
                 end
 
@@ -1191,13 +1191,13 @@ end
 
 local settingsChangedCallback = async:callback(function(group, key)
     print("Settings change (" .. tostring(group) .. "=" .. tostring(key) .. "). Reloading.")
-    stateMachine:replace(stateMachine:current())
+    --stateMachine:replace(stateMachine:current())
 
     -- pop everything
-    --[[while stateMachine:pop() ~= nil do
+    while stateMachine:pop() ~= nil do
     end
     stateMachine:push(normalState)
-    stateMachine:push(getTravelState())]] --
+    stateMachine:push(getTravelState())
 end)
 
 settings.input.subscribe(settingsChangedCallback)
