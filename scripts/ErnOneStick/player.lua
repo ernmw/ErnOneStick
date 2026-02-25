@@ -340,7 +340,7 @@ uiState:set({
 
 local function handleControlLoss()
     -- try to not destroy the camera so much
-    if (types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Looking) ~= true) or (types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Controls) ~= true) then
+    if (types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Looking) ~= true) then
         if stateMachine:current().name ~= noControlState.name then
             settings.debugPrint("Detected lack of control, stopping one-stick mode.")
             stateMachine:push(noControlState)
@@ -906,7 +906,10 @@ oneStickTravelState:set({
             pself.controls.pitchChange = 0
         end
 
-        if keys.forward.pressed then
+        if (types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Controls) ~= true) then
+            pself.controls.movement = 0
+            pself.controls.run = false
+        elseif keys.forward.pressed then
             pself.controls.movement = keys.forward.analog
             pself.controls.run = s.base.alwaysRun or
                 ((keys.forward.analog > runThreshold) and (s.base.lowFatigue ~= true))
@@ -1045,15 +1048,16 @@ oneStickTravelState:set({
     end
 })
 
+-- just grab FOV once, while we are outside of any states.
+-- this prevents doubling-up FOV.
+local initialFOV = camera.getFieldOfView()
 preliminaryFreeLookState:set({
     name = "preliminaryFreeLookState",
     initialMode = nil,
-    initialFOV = nil,
     timeInState = 0,
     onEnter = function(base)
         base.initialMode = camera.getMode()
-        base.initialFOV = camera.getFieldOfView()
-        camera.setFieldOfView(base.initialFOV / settings.input.freeLookZoom)
+        camera.setFieldOfView(initialFOV / settings.input.freeLookZoom)
         camera.setMode(camera.MODE.FirstPerson, true)
         base.timeInState = 0
         clearControls()
@@ -1085,7 +1089,7 @@ preliminaryFreeLookState:set({
     end,
     onExit = function(base)
         camera.setMode(base.initialMode, true)
-        camera.setFieldOfView(base.initialFOV)
+        camera.setFieldOfView(initialFOV)
     end,
     onUpdate = function(s, dt)
     end
@@ -1094,22 +1098,20 @@ preliminaryFreeLookState:set({
 freeLookState:set({
     name = "freeLookState",
     initialMode = nil,
-    initialFOV = nil,
     onEnter = function(base)
         takeControl(true)
         -- this is not resetting base.looking
         base.initialMode = camera.getMode()
-        base.initialFOV = camera.getFieldOfView()
         clearControls()
 
         resetCamera()
 
-        camera.setFieldOfView(base.initialFOV / settings.input.freeLookZoom)
+        camera.setFieldOfView(initialFOV / settings.input.freeLookZoom)
         camera.setMode(camera.MODE.FirstPerson, true)
     end,
     onExit = function(base)
         camera.setMode(base.initialMode, true)
-        camera.setFieldOfView(base.initialFOV)
+        camera.setFieldOfView(initialFOV)
         pself.controls.yawChange = 0
         pself.controls.pitchChange = 0
     end,
@@ -1127,17 +1129,20 @@ freeLookState:set({
         end
 
         if keys.forward.pressed then
-            pself.controls.pitchChange = keys.forward.analog * settings.input.lookSensitivityVertical * (-1 * dt) *
+            pself.controls.pitchChange = easeInOutSine(keys.forward.analog) * settings.input.lookSensitivityVertical *
+                (-1 * dt) *
                 invertLook
         elseif keys.backward.pressed then
-            pself.controls.pitchChange = keys.backward.analog * settings.input.lookSensitivityVertical * dt * invertLook
+            pself.controls.pitchChange = easeInOutSine(keys.backward.analog) * settings.input.lookSensitivityVertical *
+                dt * invertLook
         else
             pself.controls.pitchChange = 0
         end
         if keys.left.pressed then
-            pself.controls.yawChange = keys.left.analog * settings.input.lookSensitivityHorizontal * (-1 * dt)
+            pself.controls.yawChange = easeInOutSine(keys.left.analog) * settings.input.lookSensitivityHorizontal *
+                (-1 * dt)
         elseif keys.right.pressed then
-            pself.controls.yawChange = keys.right.analog * settings.input.lookSensitivityHorizontal * dt
+            pself.controls.yawChange = easeInOutSine(keys.right.analog) * settings.input.lookSensitivityHorizontal * dt
         else
             pself.controls.yawChange = 0
         end
