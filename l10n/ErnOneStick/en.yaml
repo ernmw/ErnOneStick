@@ -58,6 +58,9 @@ runMinimumFatigue_description: "Disable running when your current Fatigue percen
 runWhenReadied_name: "Run While Readied"
 runWhenReadied_description: "Always run when you have your Spell or Weapon ready while in Travel mode. Bypasses 'Run Minimum Fatigue'."
 
+speedUpStanceSwitching_name: "Speed Up Stance Switching"
+speedUpStanceSwitching_description: "Speed up the animations where you ready a weapon or spell. Makes the Toggle button more bearable."
+
 disable_name: "Disable Mod"
 disable_description: "Turn the mod off. You will need to reload lua (or save and then reload) afterward."
 
