@@ -23,8 +23,9 @@ local ui = require("openmw.interfaces").UI
 local keytrack = require("scripts.ErnOneStick.keytrack")
 local core = require("openmw.core")
 local input = require('openmw.input')
-local controls = require('openmw.interfaces').Controls
+local interfaces = require('openmw.interfaces')
 local settings = require("scripts.ErnOneStick.settings.settings")
+local animation = require('openmw.animation')
 
 local toggleKey = keytrack.NewKey("toggle",
     function(dt) return input.getBooleanActionValue(settings.uniToggleActionName) end)
@@ -42,7 +43,38 @@ local function canDoFighting()
     return types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Fighting)
 end
 
+
+--[[
+handtohand/equip start
+handtohand/equip stop
+
+handtohand/unequip start
+handtohand/unequip stop
+
+spellcast/equip start
+spellcast/equip stop
+
+spellcast/unequip start
+spellcast/unequip stop
+
+]]
+
+local speedUpKeys = {
+    ["unequip stop"] = true,
+    ["unequip start"] = true,
+    ["equip stop"] = true,
+    ["equip start"] = true,
+}
+
+interfaces.AnimationController.addTextKeyHandler('', function(groupName, key)
+    if speedUpKeys[key] and settings.input.speedUpStanceSwitching then
+        animation.setSpeed(pself, groupName, 3)
+    end
+end)
+
+
 local function toggle()
+    print(tostring(types.Actor.getStance(pself)))
     -- Nothing -> Spell -> Weapon -> Nothing
     if types.Actor.getStance(pself) == types.Actor.STANCE.Nothing then
         if canDoMagic() then

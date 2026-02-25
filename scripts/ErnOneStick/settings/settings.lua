@@ -216,6 +216,12 @@ local function init()
             default = cameraModes[1],
             renderer = "select",
         }, {
+            key = "speedUpStanceSwitching",
+            name = "speedUpStanceSwitching_name",
+            description = "speedUpStanceSwitching_description",
+            default = true,
+            renderer = "checkbox",
+        }, {
             key = "toggleButton",
             name = "toggleButton_name",
             description = "toggleButton_description",
