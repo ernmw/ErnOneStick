@@ -60,15 +60,21 @@ spellcast/unequip stop
 ]]
 
 local speedUpKeys = {
-    ["unequip stop"] = true,
     ["unequip start"] = true,
-    ["equip stop"] = true,
     ["equip start"] = true,
+}
+local normalSpeedKeys = {
+    ["unequip stop"] = true,
+    ["equip stop"] = true,
 }
 
 interfaces.AnimationController.addTextKeyHandler('', function(groupName, key)
-    if speedUpKeys[key] and settings.input.speedUpStanceSwitching then
-        animation.setSpeed(pself, groupName, 3)
+    if settings.input.speedUpStanceSwitching then
+        if speedUpKeys[key] then
+            animation.setSpeed(pself, groupName, 3)
+        elseif normalSpeedKeys[key] then
+            animation.setSpeed(pself, groupName, 1)
+        end
     end
 end)
 
