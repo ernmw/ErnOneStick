@@ -1153,6 +1153,8 @@ freeLookState:set({
 
 stateMachine:push(getTravelState())
 
+local isSneaking = pself.controls.sneak
+
 local function onFrame(dt)
     -- Track inputs.
     for _, inp in pairs(keys) do
@@ -1161,7 +1163,8 @@ local function onFrame(dt)
 
     -- Have to recreate sneak toggle.
     if keys.sneak.rise then
-        pself.controls.sneak = not pself.controls.sneak
+        isSneaking = not isSneaking
+        pself.controls.sneak = isSneaking
     end
 
     handleControlLoss()

@@ -31,6 +31,8 @@ content=ErnOneStick.omwscripts
 
 After installation, **you must assign a button to the Lock Button action in the mod settings.** Before mapping buttons, unmap any existing game actions to them.
 
+Set "Toggle Sneak" to true!
+
 ### One Analogue Stick
 
 - Set a "Lock-On Button".
