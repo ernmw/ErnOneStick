@@ -15,18 +15,19 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ]]
-local interfaces          = require("openmw.interfaces")
-local storage             = require("openmw.storage")
-local MOD_NAME            = require("scripts.ErnOneStick.ns")
-local aux_util            = require('openmw_aux.util')
-local input               = require('openmw.input')
-local async               = require("openmw.async")
+local interfaces            = require("openmw.interfaces")
+local storage               = require("openmw.storage")
+local MOD_NAME              = require("scripts.ErnOneStick.ns")
+local aux_util              = require('openmw_aux.util')
+local input                 = require('openmw.input')
+local async                 = require("openmw.async")
 
-local minFatigue          = { "0%", "25%", "50%", "75%" }
-local cameraModes         = { "first", "third" }
+local minFatigue            = { "0%", "25%", "50%", "75%" }
+local cameraModes           = { "first", "third" }
 
-local lockActionName      = MOD_NAME .. "LockAction"
-local uniToggleActionName = MOD_NAME .. "ToggleAction"
+local lockActionName        = MOD_NAME .. "LockAction"
+local uniToggleActionName   = MOD_NAME .. "ToggleAction"
+local menuToggleTriggerName = MOD_NAME .. "MenuTrigger"
 
 local function groupKey(groupName)
     return 'Settings/' .. MOD_NAME .. '/' .. groupName
@@ -56,6 +57,11 @@ local function init()
         type = input.ACTION_TYPE.Boolean,
         l10n = MOD_NAME,
         defaultValue = false,
+    }
+
+    input.registerTrigger {
+        key = menuToggleTriggerName,
+        l10n = MOD_NAME,
     }
 
     interfaces.Settings.registerGroup {
@@ -231,6 +237,16 @@ local function init()
                 key = uniToggleActionName,
                 type = "action"
             },
+        }, {
+            key = "menuButton",
+            default = "None8",
+            renderer = "inputBinding",
+            name = "menuButton_name",
+            description = "menuButton_description",
+            argument = {
+                key = menuToggleTriggerName,
+                type = "trigger"
+            },
         } }
     }
 end
@@ -312,4 +328,5 @@ return {
     debugPrint = debugPrint,
     lockActionName = lockActionName,
     uniToggleActionName = uniToggleActionName,
+    menuToggleTriggerName = menuToggleTriggerName,
 }

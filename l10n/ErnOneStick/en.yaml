@@ -19,6 +19,9 @@ lockButton_description: "The key used to trigger lock-on. Click 'N/A' or 'None' 
 toggleButton_name: "Toggle Button"
 toggleButton_description: "Optional keybind for the combined-toggle button. Hold to toggle sneak, tap to cycle through Hands-Down, Spell Ready, and Weapon Ready."
 
+menuButton_name: "Menu Button"
+menuButton_description: "Don't use this if you're using the Gamepad UI! Optional keybind that cycles through Magic, Map, Inventory, Stats, and Journal windows. Saves a button and is useful on a small screen."
+
 twoStickMode_name: "Two-Stick Mode"
 twoStickMode_description: "Use normal movement controls during travel mode. Enable this if you have two sticks."
 
