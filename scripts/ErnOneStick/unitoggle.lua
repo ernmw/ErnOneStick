@@ -43,22 +43,6 @@ local function canDoFighting()
     return types.Player.getControlSwitch(pself, types.Player.CONTROL_SWITCH.Fighting)
 end
 
-
---[[
-handtohand/equip start
-handtohand/equip stop
-
-handtohand/unequip start
-handtohand/unequip stop
-
-spellcast/equip start
-spellcast/equip stop
-
-spellcast/unequip start
-spellcast/unequip stop
-
-]]
-
 local speedUpKeys = {
     ["unequip start"] = true,
     ["equip start"] = true,
