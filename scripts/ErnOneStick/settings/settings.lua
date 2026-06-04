@@ -37,6 +37,21 @@ local adminGroupKey = groupKey("Admin")
 local dpadGroupKey = groupKey("DPAD")
 local inputGroupKey = groupKey("Input")
 
+--- Settings rendering tricks
+local function updateTwoStickMode()
+    print("updateTwoStickMode()")
+    local section = storage.playerSection(inputGroupKey)
+    local twoStickMode = section:get('twoStickMode')
+
+    interfaces.Settings.updateRendererArgument(dpadGroupKey, 'runWhenReadied', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'travelcam', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'autoLockon', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'lookSensitivityHorizontal', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'lookSensitivityVertical', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'invertLookVertical', { disabled = twoStickMode })
+    interfaces.Settings.updateRendererArgument(inputGroupKey, 'freeLookZoom', { disabled = twoStickMode })
+end
+
 local function init()
     interfaces.Settings.registerPage {
         key = MOD_NAME,
@@ -249,6 +264,10 @@ local function init()
             },
         } }
     }
+
+    updateTwoStickMode()
+    local inputSection = storage.playerSection(inputGroupKey)
+    inputSection:subscribe(async:callback(updateTwoStickMode))
 end
 
 local lookupFuncTable = {
