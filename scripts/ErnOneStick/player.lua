@@ -37,13 +37,27 @@ local nearby = require('openmw.nearby')
 local cameraInterface = require("openmw.interfaces").Camera
 local uiInterface = require("openmw.interfaces").UI
 
-
 local settings = require("scripts.ErnOneStick.settings.settings")
 
 if settings.admin.disable then
     print(MOD_NAME .. " is disabled.")
     return
 end
+
+local function warn360()
+    local storage = require('openmw.storage')
+    -- This is a setting group in the OMW camera script.
+    -- The individual setting we're interested in is 'move360'
+    local thirdPersonGroup = "SettingsOMWCameraThirdPerson"
+    local move360Enabled = storage.playerSection(thirdPersonGroup):get("move360")
+    if move360Enabled then
+        local localization = core.l10n(MOD_NAME)
+        local ui = require('openmw.ui')
+        ui.showMessage(localization("move360Warning"))
+    end
+end
+warn360()
+
 
 local function takeControl(assumeControl)
     if assumeControl then
@@ -438,7 +452,7 @@ lockedOnState:set({
         end
 
         local shouldRun = false
-        track(s.base.lookPosition, 0.8, s.base.pitchMod, s.base.yawMod)
+        track(s.base.lookPosition, 0.9, s.base.pitchMod, s.base.yawMod)
         if keys.forward.pressed then
             pself.controls.movement = keys.forward.analog
             shouldRun = shouldRun or (keys.forward.analog > runThreshold)
@@ -597,6 +611,7 @@ lockSelectionState:set({
                     return false
                 end
 
+                -- TODO: consider using castRenderingRay instead. this is only available in onFrame
                 return hasLOS(playerHead, e)
             end)
 
