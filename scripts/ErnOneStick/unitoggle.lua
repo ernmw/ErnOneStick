@@ -106,7 +106,7 @@ local function onFrame(dt)
 
     if longPressHandled == false and toggleKey.pressed and toggleKey.pressedDuration > 0.2 then
         --settings.debugPrint("toggle sneak")
-        pself.controls.sneak = not pself.controls.sneak
+        input.activateTrigger('ToggleSneak')
         longPressHandled = true
     end
 
@@ -120,5 +120,5 @@ local function onFrame(dt)
 end
 
 return {
-    onFrame = onFrame
+    onFrame = onFrame,
 }

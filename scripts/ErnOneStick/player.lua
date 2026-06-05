@@ -58,16 +58,18 @@ local function warn360()
 end
 warn360()
 
-
+local hasControl = false
 local function takeControl(assumeControl)
     if assumeControl then
         settings.debugPrint("disabling controls")
         controls.overrideMovementControls(true)
         cameraInterface.disableModeControl(MOD_NAME)
+        hasControl = true
     else
         settings.debugPrint("enabling controls")
         controls.overrideMovementControls(false)
         cameraInterface.enableModeControl(MOD_NAME)
+        hasControl = false
     end
 end
 
@@ -275,8 +277,6 @@ local keys = {
     right = keytrack.NewKey("right", function(dt)
         return input.getRangeActionValue("MoveRight")
     end),
-    sneak = keytrack.NewKey("sneak",
-        function(dt) return input.getBooleanActionValue("Sneak") end)
 }
 
 -- Jump is a trigger, not an action.
@@ -1169,18 +1169,16 @@ freeLookState:set({
 
 stateMachine:push(getTravelState())
 
-local isSneaking = pself.controls.sneak
+input.registerTriggerHandler('ToggleSneak', async:callback(function()
+    if not hasControl then return end
+    settings.debugPrint("toggling sneak")
+    pself.controls.sneak = not pself.controls.sneak
+end))
 
 local function onFrame(dt)
     -- Track inputs.
     for _, inp in pairs(keys) do
         inp:update(dt)
-    end
-
-    -- Have to recreate sneak toggle.
-    if keys.sneak.rise then
-        isSneaking = not isSneaking
-        pself.controls.sneak = isSneaking
     end
 
     handleControlLoss()
