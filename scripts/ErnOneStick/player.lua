@@ -452,7 +452,7 @@ lockedOnState:set({
         end
 
         local shouldRun = false
-        track(s.base.lookPosition, 0.8, s.base.pitchMod, s.base.yawMod)
+        track(s.base.lookPosition, 0.9, s.base.pitchMod, s.base.yawMod)
         if keys.forward.pressed then
             pself.controls.movement = keys.forward.analog
             shouldRun = shouldRun or (keys.forward.analog > runThreshold)

@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 local interfaces            = require("openmw.interfaces")
 local storage               = require("openmw.storage")
 local MOD_NAME              = require("scripts.ErnOneStick.ns")
-local aux_util              = require('openmw_aux.util')
 local input                 = require('openmw.input')
 local async                 = require("openmw.async")
 
